@@ -64,8 +64,9 @@ public class PatientServiceImpl implements PatientService {
   }
 
   @Override
-  public void deletePatient(Patient patient) {
-    log.info("deletePatient {}", patient.toString());
-    repository.delete(patient);
+  public void deletePatient(final UUID id) {
+    log.info("deletePatient {}", id);
+    Optional<Patient> patient = repository.findById(id);
+    repository.delete(patient.get());
   }
 }

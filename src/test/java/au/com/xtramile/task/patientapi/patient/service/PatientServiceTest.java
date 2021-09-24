@@ -161,18 +161,19 @@ public class PatientServiceTest {
 
   @Test
   void itShoudlDeleteFromDb() {
-    Patient patient = new Patient();
-    patient.setFirstName("ANY-FIRSTNAME");
-    patient.setLastName("ANY-LASTNAME");
-    patient.setEmailAddress("ANY-EMAIL");
-    patient.setPhoneNumber("ANY-PHONE");
-    patient.setCreatedDate(LocalDateTime.now());
+    UUID id = UUID.randomUUID();
+    Patient data = new Patient();
+    data.setId(id);
+    data.setFirstName("A");
+    data.setEmailAddress("emailAddress");
+    when(repository.findById(any())).thenReturn(Optional.of(data));
 
-    underTest.deletePatient(patient);
+    underTest.deletePatient(id);
 
     ArgumentCaptor<Patient> captorPatient = ArgumentCaptor.forClass(Patient.class);
     verify(repository).delete(captorPatient.capture());
-    assertEquals("ANY-FIRSTNAME", captorPatient.getValue().getFirstName());
+    assertEquals(id, captorPatient.getValue().getId());
+    assertEquals("emailAddress", captorPatient.getValue().getEmailAddress());
   }
 
   @Test

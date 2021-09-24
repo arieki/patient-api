@@ -14,5 +14,5 @@ public interface PatientService {
 
   Page<Patient> fetchAllByPage(final int page, final int size);
 
-  void deletePatient(final Patient patient);
+  void deletePatient(final UUID id);
 }

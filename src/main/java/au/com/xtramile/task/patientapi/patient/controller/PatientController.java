@@ -51,9 +51,9 @@ public class PatientController {
   }
   
   @DeleteMapping(value = "/delete")
-  public ResponseEntity<Patient> deletePatient(@RequestBody Patient patient) {
-    log.info("deletePatient {}", patient.toString());
-    service.deletePatient(patient);
+  public ResponseEntity<Patient> deletePatient(@RequestParam UUID id) {
+    log.info("deletePatient {}", id);
+    service.deletePatient(id);
     return ResponseEntity.noContent().build();
   }
 

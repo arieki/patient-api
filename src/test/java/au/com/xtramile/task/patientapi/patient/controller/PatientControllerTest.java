@@ -133,11 +133,7 @@ public class PatientControllerTest {
   @Test
   void itShouldDeleteRecordFromDb() throws Exception {
     this.mockMvc.perform(
-      MockMvcRequestBuilders.delete("/api/v1/delete").contentType(MediaType.APPLICATION_JSON)
-      .content("{\"id\":\"de6af5c5-42b7-45f3-9077-bc2bfd8d39ef\", "
-      + "\"userId\":\"ANY-IDNUMBER\",\"firstName\":\"ANY-FIRSTNAME\", "
-      + "\"lastName\":\"ANY-LASTNAME\",\"emailAddress\":null,\"phoneNumber\":null, "
-      + "\"address\":null,\"createdDate\":\"24/09/2021 16:24:00\",\"updatedDate\":null}")
+      MockMvcRequestBuilders.delete("/api/v1/delete").param("id", "de6af5c5-42b7-45f3-9077-bc2bfd8d39ef")
     )
     .andExpect(MockMvcResultMatchers.status().isNoContent());
     
