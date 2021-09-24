@@ -9,8 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -37,9 +38,9 @@ public class Patient {
   @Column
   private String address;
   @Column(name = "created_date")
-  @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+  @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
   private LocalDateTime createdDate;
   @Column(name = "updated_date")
-  @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+  @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
   private LocalDateTime updateDate;
 }

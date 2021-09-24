@@ -12,7 +12,7 @@ public interface PatientService {
 
   Patient updatePatient(final UUID id, final Patient patient);
 
-  Page<Patient> fetchPatientsByPage(final int page, final int size);
+  Page<Patient> fetchAllByPage(final int page, final int size);
 
   void deletePatient(final Patient patient);
 }

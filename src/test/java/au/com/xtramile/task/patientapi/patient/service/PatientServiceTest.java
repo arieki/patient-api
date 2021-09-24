@@ -137,7 +137,7 @@ public class PatientServiceTest {
 
     when(repository.findAll(any(Pageable.class))).thenReturn(patients);
 
-    Page<Patient> currPage = underTest.fetchPatientsByPage(0, 2);
+    Page<Patient> currPage = underTest.fetchAllByPage(0, 2);
     assertEquals(2, currPage.getContent().size());
     assertEquals("A", currPage.getContent().get(0).getFirstName());
     assertEquals(2, currPage.getTotalPages());

@@ -54,8 +54,8 @@ public class PatientServiceImpl implements PatientService {
   }
 
   @Override
-  public Page<Patient> fetchPatientsByPage(int page, int size) {
-    log.info("fetchPatientsByPage [page: {}, size: {}]", page, size);
+  public Page<Patient> fetchAllByPage(int page, int size) {
+    log.info("fetchAllByPage [page: {}, size: {}]", page, size);
     return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "firstName")));
   }
 
