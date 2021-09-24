@@ -66,6 +66,22 @@ public class PatientServiceTest {
   }
 
   @Test
+  void whenCreateNewPatientWithBlankEmailAndPhone_itShouldThrowRuntimeException() {
+    Patient patient = new Patient();
+    patient.setFirstName("ANY-FIRSTNAME");
+    patient.setLastName("ANY-LASTNAME");
+    patient.setEmailAddress(null);
+    patient.setPhoneNumber(null);
+    patient.setCreatedDate(LocalDateTime.now());
+
+    RuntimeException saveException = assertThrows(RuntimeException.class, 
+      () -> underTest.createNewPatient(patient));
+    verify(repository, times(0)).findByEmailAddressOrPhoneNumber(anyString(), anyString());
+    verify(repository, times(0)).save(any());
+    assertTrue(saveException.getMessage().contains("email and phone number should not be null"));
+  }
+
+  @Test
   void whenCreateDuplicatePatient_itShouldThrowsRuntimeException() {
     Patient patient = new Patient();
     patient.setFirstName("ANY-FIRSTNAME");

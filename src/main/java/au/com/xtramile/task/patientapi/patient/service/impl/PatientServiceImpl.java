@@ -24,6 +24,10 @@ public class PatientServiceImpl implements PatientService {
   @Override
   public Patient createNewPatient(Patient patient) {
     log.info("createNewPatient {}", patient.toString());
+    if (patient.getEmailAddress() == null || patient.getPhoneNumber() == null) {
+      throw new RuntimeException("email and phone number should not be null");
+    }
+
     Boolean isExist = 
       repository.findByEmailAddressOrPhoneNumber(patient.getEmailAddress(), patient.getPhoneNumber());
     if (isExist) {
