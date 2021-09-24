@@ -20,3 +20,8 @@ Make sure you are inside `parent-api` directory and run the following command:
 ```
 
 once the API is running, you may test to invoke each of the enpoint through any convenience HTTP client test tools e.g.: Postman
+Here is the API documentation:
+
+```
+http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+```
