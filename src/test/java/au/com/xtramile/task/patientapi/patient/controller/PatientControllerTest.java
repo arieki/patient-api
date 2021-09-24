@@ -80,6 +80,25 @@ public class PatientControllerTest {
   }
 
   @Test
+  void whenCreateNewPatientThenThrowsError_itShouldResponseBadRequest() throws Exception {
+    RuntimeException exception = new RuntimeException("email and phone number should not be null");
+    when(patientService.createNewPatient(any())).thenThrow(exception);
+
+    this.mockMvc.perform(
+      MockMvcRequestBuilders.post("/api/v1/save").contentType(MediaType.APPLICATION_JSON)
+        .content(
+          "{\"id\":\"de6af5c5-42b7-45f3-9077-bc2bfd8d39ef\", "
+          + "\"userId\":\"ANY-IDNUMBER\",\"firstName\":\"ANY-FIRSTNAME\", "
+          + "\"lastName\":\"ANY-LASTNAME\",\"emailAddress\":null,\"phoneNumber\":null, "
+          + "\"address\":null,\"createdDate\":\"24/09/2021 16:24:00\",\"updatedDate\":null}")
+      )
+      .andExpect(MockMvcResultMatchers.status().isBadRequest())
+      .andExpect(MockMvcResultMatchers.content().string("email and phone number should not be null"));
+
+    verify(patientService).createNewPatient(any());
+  }
+
+  @Test
   void whenFetchPatients_itShouldReturnBasedOnSizeConstraint() throws Exception {
     List<Patient> content = new LinkedList<>();
     Patient data = new Patient();
