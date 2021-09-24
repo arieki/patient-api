@@ -6,3 +6,9 @@ app:
       username: postgres
       password: 'password'
       pool-size: 5
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false

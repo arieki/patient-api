@@ -1,4 +1,4 @@
-package au.com.xtramile.task.patientapi.patient;
+package au.com.xtramile.task.patientapi.patient.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
