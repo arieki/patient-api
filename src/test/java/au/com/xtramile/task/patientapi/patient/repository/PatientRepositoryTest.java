@@ -12,14 +12,14 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import au.com.xtramile.task.patientapi.patient.model.Patient;
 
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class PatientRepositoryTest {
   
@@ -78,4 +78,71 @@ public class PatientRepositoryTest {
     Boolean isExist = underTest.findByEmailAddressOrPhoneNumber("ANY-EMAIL2", "ANY-PHONE2");
     assertFalse(isExist);
   }
+
+  @Test
+  void whenFindAllOnCurrentPage_itShouldReturnOnlyLessThanEqualsToSize() {
+    underTest.save(patient);
+    patient = new Patient();
+    patient.setFirstName("FIRSTNAME-2");
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    underTest.save(patient);
+
+    patient = new Patient();
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    patient.setFirstName("FIRSTNAME-3");
+    underTest.save(patient);
+
+    patient = new Patient();
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    patient.setFirstName("FIRSTNAME-4");
+    underTest.save(patient);
+
+    Page<Patient> currPage = underTest.findAll(PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "firstName")));
+  
+    assertEquals(3, currPage.getContent().size()); 
+    assertEquals("ANY-FIRST", currPage.getContent().get(0).getFirstName());
+  }
+
+  @Test
+  void whenFindAllOnNextPage_itShouldReturnOnlyLessThanEqualsToSize() {
+    underTest.save(patient);
+    patient = new Patient();
+    patient.setFirstName("FIRSTNAME-2");
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    underTest.save(patient);
+
+    patient = new Patient();
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    patient.setFirstName("FIRSTNAME-3");
+    underTest.save(patient);
+
+    patient = new Patient();
+    patient.setLastName("ANY-LAST");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setCreatedDate(LocalDateTime.now());
+    patient.setFirstName("FIRSTNAME-4");
+    underTest.save(patient);
+
+    Page<Patient> currPage = underTest.findAll(PageRequest.of(1, 3, Sort.by(Sort.Direction.ASC, "firstName")));
+  
+    assertEquals(1, currPage.getContent().size()); 
+    assertEquals("FIRSTNAME-4", currPage.getContent().get(0).getFirstName());
+  }
+
 }

@@ -3,6 +3,9 @@ package au.com.xtramile.task.patientapi.patient.service.impl;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import au.com.xtramile.task.patientapi.patient.model.Patient;
@@ -48,5 +51,17 @@ public class PatientServiceImpl implements PatientService {
       repository.save(updated);
     }
     return patient;
+  }
+
+  @Override
+  public Page<Patient> fetchPatientsByPage(int page, int size) {
+    log.info("fetchPatientsByPage [page: {}, size: {}]", page, size);
+    return repository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "firstName")));
+  }
+
+  @Override
+  public void deletePatient(Patient patient) {
+    log.info("deletePatient {}", patient.toString());
+    repository.delete(patient);
   }
 }

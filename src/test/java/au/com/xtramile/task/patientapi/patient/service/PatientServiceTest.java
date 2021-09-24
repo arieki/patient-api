@@ -11,6 +11,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +22,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import au.com.xtramile.task.patientapi.patient.model.Patient;
 import au.com.xtramile.task.patientapi.patient.repository.PatientRepository;
@@ -112,4 +119,48 @@ public class PatientServiceTest {
     assertEquals(updatedPatient, captorPatient.getValue());
   }
 
+
+  @Test
+  void whenFetchPatientsByPage_itShouldReturnLessThanEqualsSize() {
+    List<Patient> content = new LinkedList<>();
+    Patient data = new Patient();
+    data.setId(UUID.randomUUID());
+    data.setFirstName("A");
+    content.add(data);
+    data = new Patient();
+    data.setId(UUID.randomUUID());
+    data.setFirstName("B");
+    content.add(data);
+
+    Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.ASC, "firstName"));
+    Page<Patient> patients = new PageImpl<>(content, pageable, 3);
+
+    when(repository.findAll(any(Pageable.class))).thenReturn(patients);
+
+    Page<Patient> currPage = underTest.fetchPatientsByPage(0, 2);
+    assertEquals(2, currPage.getContent().size());
+    assertEquals("A", currPage.getContent().get(0).getFirstName());
+    assertEquals(2, currPage.getTotalPages());
+  }
+
+  @Test
+  void itShoudlDeleteFromDb() {
+    Patient patient = new Patient();
+    patient.setFirstName("ANY-FIRSTNAME");
+    patient.setLastName("ANY-LASTNAME");
+    patient.setEmailAddress("ANY-EMAIL");
+    patient.setPhoneNumber("ANY-PHONE");
+    patient.setCreatedDate(LocalDateTime.now());
+
+    underTest.deletePatient(patient);
+
+    ArgumentCaptor<Patient> captorPatient = ArgumentCaptor.forClass(Patient.class);
+    verify(repository).delete(captorPatient.capture());
+    assertEquals("ANY-FIRSTNAME", captorPatient.getValue().getFirstName());
+  }
+
+  @Test
+  void whenDeletePatientThatIsNotExist_itShouldThrowRuntimeException() {
+    assertThrows(RuntimeException.class, () -> underTest.deletePatient(null), "no parameter passed");
+  }
 }

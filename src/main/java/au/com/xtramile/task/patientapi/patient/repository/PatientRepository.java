@@ -17,4 +17,6 @@ public interface PatientRepository extends JpaRepository<Patient, UUID> {
     + " FROM PATIENT WHERE EMAIL_ADDRESS = :emailAddress OR PHONE_NUMBER = :phoneNumber", nativeQuery = true)
   Boolean findByEmailAddressOrPhoneNumber(String emailAddress, String phoneNumber);
 
+  Page<Patient> findAll(Pageable pageable);
+  
 }
